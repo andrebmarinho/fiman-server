@@ -8,6 +8,6 @@ export default {
         const db = mongoose.connection;
 
         db.once('open', () => console.log('Connected to MongoDB'));
-        db.on('error', (err) => console.err(err));
+        db.on('error', (err) => console.error(err));
     }
 }

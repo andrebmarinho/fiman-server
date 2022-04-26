@@ -3,7 +3,7 @@ import Category from "../models/category.model.js";
 
 export default class CategoryController {
     static async find(req, res, next) {
-        const limitPerPage = req.query.limitPerPage ? parseInt(req.query.limitPerPage, 10) : 20;
+        const limitPerPage = req.query.limitPerPage ? parseInt(req.query.limitPerPage, 10) : 5;
         const page = req.query.page ? parseInt(req.query.page, 10) : 0;
 
         const description = req.query.description;
@@ -12,24 +12,30 @@ export default class CategoryController {
 
         const id = req.params.id;
 
+        console.info(`Category | GET ${ id ? '| ' + id : ''}`);
+
         try {
-            const categories = await Service.find(id, query, page, limitPerPage);
+            const response = await Service.find(id, query, page, limitPerPage);
+            const itemsCount = id ? 1 : page === 0 ? await Service.count(query) : null;
             return res.status(200).json({ 
                 status: 200, 
-                data: id ? categories[0] : categories, 
+                categories: response, 
+                count: itemsCount,
                 message: "Success" 
             });
         } catch (err) {
             console.error("Error - GET Categories: " + err);
             return res.status(400).json({ 
                 status: 400, 
-                message: e.message 
+                message: err 
             });
         }
     }
 
     static async create(req, res, next) {
-        const newCategory = new Cate(
+        console.info("Category | POST");
+
+        const newCategory = new Category(
             {
                 description: req.body.description
             }
@@ -39,19 +45,20 @@ export default class CategoryController {
             const category = await Service.create(newCategory);
             return res.status(200).json({ 
                 status: 200, 
-                data: category, 
+                category, 
                 message: "Success" 
             });
         } catch (err) {
-            console.error("Error - POST Category: " + err);
+            console.error(err);
             return res.status(400).json({ 
                 status: 400, 
-                message: e.message 
+                message: err 
             });
         }
     }
 
     static async edit(req, res, next) {
+
         if (!req.body) {
             return res.status(400).send({
                 message: "Data to update can not be empty!"
@@ -59,38 +66,40 @@ export default class CategoryController {
         }
         
         const id = req.params.id;
+        console.info("Category | PUT | " + id);
 
         try {
             const category = await Service.edit(id, req.body);
             return res.status(200).json({ 
                 status: 200, 
-                data: category, 
+                category, 
                 message: "Success" 
             });
         } catch (err) {
-            console.error("Error - PUT Category: " + err);
+            console.error(err);
             return res.status(400).json({ 
                 status: 400, 
-                message: e.message 
+                message: err 
             });
         }
     }
 
     static async remove(req, res, next) {
         const id = req.params.id;
+        console.info("Category | DELETE | " + id);
 
         try {
-            const category = await Service.edit(id, req.body);
+            const category = await Service.remove(id);
             return res.status(200).json({ 
                 status: 200, 
-                data: category, 
+                category, 
                 message: "Success" 
             });
         } catch (err) {
-            console.error("Error - DELETE Category: " + err);
+            console.error(err);
             return res.status(400).json({ 
                 status: 400, 
-                message: e.message 
+                message: err 
             });
         }
     }

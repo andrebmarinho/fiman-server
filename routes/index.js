@@ -5,7 +5,7 @@ import { Router } from 'express';
 
 export default {
     loadRoutes: (app) => {
-        const prefix = '/api';
+        const prefix = '/api/v1/fiman/';
 
         app.get('/', (req, res) => res.send('TEST BLANK PAGE'));
 
@@ -15,7 +15,7 @@ export default {
         fs.readdirSync(__dirname).forEach((file) => {
             if (file === 'index.js') return;
 
-            let pathName = file.replace('.js', '');
+            let pathName = file.replace('.js', '').split('.')[0];
             pathName = pathName[pathName.length - 1] === 'y' ?
                 pathName.slice(0, pathName.length - 1) + 'ies' : pathName + 's';
 
@@ -26,7 +26,7 @@ export default {
                 app.use(prefix + pathName, route);
 
                 
-                console.info('Loaded route ' + pathName.split('.')[0]);
+                console.info('Loaded route ' + pathName);
             }).catch(err => console.error(err));
         });
     }
