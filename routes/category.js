@@ -1,4 +1,4 @@
-import CategoryController from "../controllers/category.controller.js";
+import CategoryController from "../controllers/category.js";
 
 export default {
     loadRouter: (router) => {

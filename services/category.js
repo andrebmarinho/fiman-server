@@ -1,4 +1,4 @@
-import Category from "../models/category.model.js";
+import Category from "../models/category.js";
 
 export default class CategoryService {
     static async count (query) {
@@ -32,7 +32,7 @@ export default class CategoryService {
 
     static async create(category) {
         try {
-            const newCategory = await category.save(category);
+            const newCategory = await category.save();
             return newCategory;
         } catch (err) {
             console.log("CategoryService Error - Create");
