@@ -1,4 +1,4 @@
-import BankAccountController from "../controllers/bank-account.js";
+import BankAccountController from '../controllers/bank-account.js';
 
 export default {
     loadRouter: (router) => {

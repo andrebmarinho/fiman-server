@@ -1,4 +1,4 @@
-import Category from "../models/category.js";
+import Category from '../models/category.js';
 
 export default class CategoryService {
     static async count (query) {
@@ -7,7 +7,7 @@ export default class CategoryService {
             itemsCount = await Category.count(query);
             return itemsCount;
         } catch (err) {
-            console.log("CategoryService Error - Count");
+            console.log('CategoryService Error - Count');
             throw err;            
         }
     }
@@ -25,7 +25,7 @@ export default class CategoryService {
 
             return categories;
         } catch (err) {
-            console.log("CategoryService Error - Find");
+            console.log('CategoryService Error - Find');
             throw err;
         }
     }
@@ -35,7 +35,7 @@ export default class CategoryService {
             const newCategory = await category.save();
             return newCategory;
         } catch (err) {
-            console.log("CategoryService Error - Create");
+            console.log('CategoryService Error - Create');
             throw err;
         }
     }
@@ -45,13 +45,13 @@ export default class CategoryService {
             const newCategory = await Category.findByIdAndUpdate(id, category, {new: true});
             
             if (!newCategory) {
-                console.log("CategoryService Error - Edit");
+                console.log('CategoryService Error - Edit');
                 throw Error(`Cannot edit Category with id=${id}. Maybe this Category was not found!`)
             }
             
             return newCategory;
         } catch (err) {
-            console.log("CategoryService Error - Edit");
+            console.log('CategoryService Error - Edit');
             throw err;
         }
     }
@@ -61,13 +61,13 @@ export default class CategoryService {
             const category = await Category.findByIdAndRemove(id);
             
             if (!category) {
-                console.log("CategoryService Error - Delete");
+                console.log('CategoryService Error - Delete');
                 throw Error(`Cannot delete Category with id=${id}. Maybe this Category was not found!`)
             }
 
             return id;
         } catch (err) {
-            console.log("CategoryService Error - Delete");
+            console.log('CategoryService Error - Delete');
             throw err;
         }
     }

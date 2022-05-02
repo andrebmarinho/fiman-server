@@ -1,5 +1,5 @@
-import Service from "../services/category.js";
-import Category from "../models/category.js";
+import Service from '../services/category.js';
+import Category from '../models/category.js';
 
 export default class CategoryController {
     static async find(req, res, next) {
@@ -8,7 +8,7 @@ export default class CategoryController {
 
         const description = req.query.description;
         const query = description ? 
-            { description: { $regex: new RegExp(description), $options: "i" } } : {};
+            { description: { $regex: new RegExp(description), $options: 'i' } } : {};
 
         const id = req.params.id;
 
@@ -19,12 +19,12 @@ export default class CategoryController {
             const itemsCount = id ? 1 : page === 0 ? await Service.count(query) : null;
             return res.status(200).json({ 
                 status: 200, 
-                categories: response, 
+                result: response, 
                 count: itemsCount,
-                message: "Success" 
+                message: 'Success' 
             });
         } catch (err) {
-            console.error("Error - GET Categories: " + err);
+            console.error('Error - GET Categories: ' + err);
             return res.status(400).json({ 
                 status: 400, 
                 message: err 
@@ -33,7 +33,7 @@ export default class CategoryController {
     }
 
     static async create(req, res, next) {
-        console.info("Categories | POST");
+        console.info('Categories | POST');
 
         const newCategory = new Category(
             {
@@ -45,8 +45,8 @@ export default class CategoryController {
             const category = await Service.create(newCategory);
             return res.status(200).json({ 
                 status: 200, 
-                category, 
-                message: "Success" 
+                result: category, 
+                message: 'Success' 
             });
         } catch (err) {
             console.error(err);
@@ -61,19 +61,19 @@ export default class CategoryController {
 
         if (!req.body) {
             return res.status(400).send({
-                message: "Data to update can not be empty!"
+                message: 'Data to update can not be empty!'
             });
         }
         
         const id = req.params.id;
-        console.info("Categories | PUT | " + id);
+        console.info('Categories | PUT | ' + id);
 
         try {
             const category = await Service.edit(id, req.body);
             return res.status(200).json({ 
                 status: 200, 
-                category, 
-                message: "Success" 
+                result: category, 
+                message: 'Success' 
             });
         } catch (err) {
             console.error(err);
@@ -86,14 +86,14 @@ export default class CategoryController {
 
     static async remove(req, res, next) {
         const id = req.params.id;
-        console.info("Categories | DELETE | " + id);
+        console.info('Categories | DELETE | ' + id);
 
         try {
             const category = await Service.remove(id);
             return res.status(200).json({ 
                 status: 200, 
-                category, 
-                message: "Success" 
+                result: category, 
+                message: 'Success' 
             });
         } catch (err) {
             console.error(err);
