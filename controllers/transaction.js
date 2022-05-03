@@ -1,6 +1,9 @@
 import Service from '../services/transaction.js';
 import Transaction from '../models/transaction.js';
 
+import mongodb from 'mongodb';
+const ObjectId = mongodb.ObjectId;
+
 export default class TransactionController {
     static async find(req, res, next) {
         const limitPerPage = req.query.limitPerPage ? parseInt(req.query.limitPerPage, 10) : 5;
@@ -12,16 +15,22 @@ export default class TransactionController {
 
         const bankDescription = req.query.bankDescription;
         const bankId = req.query.bankId;
-        
+
         const creditCardDescription = req.query.creditCardDescription;
         const creditCardId = req.query.creditCardId;
-        
-         let query = description ?
-            { 
-                description: { 
-                    $regex: new RegExp(description), $options: 'i' 
-                } 
+
+        const income = req.query.income;
+
+        let query = description ?
+            {
+                description: {
+                    $regex: new RegExp(description), $options: 'i'
+                }
             } : {};
+
+        if (income) {
+            query.income;
+        }
 
         if (reference) {
             query.reference = reference;
@@ -29,52 +38,19 @@ export default class TransactionController {
 
         if (transactionDate) {
             query.transactionDate = {
-                $gte: new Date(transactionDate), 
+                $gte: new Date(transactionDate),
                 $lte: new Date(transactionDate)
             }
         }
-        
+
         const id = req.params.id;
+        
+        if (bankId) {
+            query.bankAccount = bankId;
+        }
 
-        if (id) {
-            query.populateCreditCard = 'creditCard';
-            query.populateBankAccount = 'bankAccount';
-        } else {
-            query.populateBankAccount = {
-                path: 'bankAccount'
-            };
-
-            query.populateCreditCard = {
-                path: 'creditCard'
-            };
-    
-            if (bankDescription) {
-                query.populateBankAccount.match = {
-                    description: { 
-                        $regex: new RegExp(bankDescription), $options: 'i' 
-                    } 
-                }
-            } 
-
-            if (creditCardDescription) {
-                query.populateCreditCard.match = {
-                    description: { 
-                        $regex: new RegExp(creditCardDescription), $options: 'i' 
-                    } 
-                }
-            } 
-            
-            if (bankId) {
-                query.populateBankAccount.match = {
-                    _id: bankId
-                }
-            }
-
-            if (creditCardId) {
-                query.populateCreditCard.match = {
-                    _id: creditCardId
-                }
-            }
+        if (creditCardId) {
+            query.creditCard = creditCardId;
         }
 
         console.info(`Transactions | GET ${id ? '| ' + id : ''}`);
@@ -107,7 +83,8 @@ export default class TransactionController {
                 transactionDate: req.body.transactionDate,
                 bankAccount: req.body.bankAccount,
                 creditCard: req.body.creditCard,
-                transactionValue: req.body.transactionValue
+                transactionValue: req.body.transactionValue,
+                income: req.body.income
             }
         );
 

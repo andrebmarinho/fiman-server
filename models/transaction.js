@@ -18,7 +18,6 @@ const Transaction = new mongoose.Schema({
     },
     bankAccount: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'BankAccount'
     },
     creditCard: { 
         type: mongoose.Schema.Types.ObjectId, 
@@ -26,6 +25,10 @@ const Transaction = new mongoose.Schema({
     },
     transactionValue: {
         type: Number,
+        required: true
+    },
+    income: {
+        type: Boolean,
         required: true
     }
 });

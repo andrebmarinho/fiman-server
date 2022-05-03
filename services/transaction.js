@@ -1,4 +1,8 @@
 import Transaction from '../models/transaction.js';
+import BankAccount from '../models/bank-account.js';
+import CreditCard from '../models/credit-card.js';
+
+import mongoose from 'mongoose';
 
 export default class TransactionService {
     static async count(query) {
@@ -17,28 +21,16 @@ export default class TransactionService {
             const skip = page * limit;
             let transactions = [];
 
-            if (!id) {                    
-                const populateCreditCard = query.populateCreditCard;
-                delete query.populateCreditCard;
-
-                const populateBankAccount = query.populateBankAccount;
-                delete query.populateBankAccount;
-
-                if (populateCreditCard.match) {
-                    query.bankAccount = undefined;
-                } else if (populateBankAccount.match) {
-                    query.creditCard = undefined;
-                }
-
+            if (!id) {                
                 transactions = await Transaction.find(query, null, { skip, limit })
-                    .populate(query.populateCreditCard)
-                    .populate(query.populateBankAccount)
-                    .exec();                
+                    .populate('creditCard')
+                    .populate('bankAccount')
+                    .exec();
             } else {
-                transactions = 
+                transactions =
                     await Transaction.findById(id)
-                        .populate(query.populateCreditCard)
-                        .populate(query.populateBankAccount)
+                        .populate('creditCard')
+                        .populate('bankAccount')
                         .exec();
             }
 
